@@ -2,10 +2,11 @@ import { Link } from "react-router"
 import { useForm, } from "react-hook-form"
 import type { IRegisterUser } from '../types/IUser'
 import Error from "../components/Error";
-import  { isAxiosError } from "axios";
 import api from "../config/axios";
+import  { isAxiosError } from "axios";
 import { toast } from 'sonner'
 import { initialValues } from "../helpers/initialValues";
+
 const Register = () => {
   const { register,
     handleSubmit,
@@ -13,11 +14,9 @@ const Register = () => {
     reset,
     formState: { errors } } = useForm({
       defaultValues: initialValues
-
     });
 
   const password = watch('password')
-
   const handleRegister = async (formData: IRegisterUser) => {
     try {
       const { data } = await api.post('/auth/register', formData)

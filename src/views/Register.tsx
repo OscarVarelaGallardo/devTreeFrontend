@@ -1,24 +1,34 @@
 import { Link } from "react-router"
-import { useForm } from "react-hook-form"
+import { useForm, } from "react-hook-form"
+import type { IRegisterUser } from '../types/IUser'
 import Error from "../components/Error";
-const initialValues = {
-  name: '',
-  email: '',
-  handle: '',
-  password: '',
-  password_confirmation: ''
-}
+import  { isAxiosError } from "axios";
+import api from "../config/axios";
+import { toast } from 'sonner'
+import { initialValues } from "../helpers/initialValues";
 const Register = () => {
   const { register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors } } = useForm({
       defaultValues: initialValues
 
     });
 
-  const handleRegister = () => {
-    console.log('Desde handleRegister')
+  const password = watch('password')
+
+  const handleRegister = async (formData: IRegisterUser) => {
+    try {
+      const { data } = await api.post('/auth/register', formData)
+      toast.success(data.msg)
+      reset()
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        const { msg } = error.response.data
+        toast.error(msg)
+      }
+    }
   }
   return (
     <>
@@ -96,7 +106,11 @@ const Register = () => {
               placeholder="Password de Registro"
               className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
               {...register("password", {
-                required: "El password es obligatorio"
+                required: "El password es obligatorio",
+                minLength: {
+                  value: 8,
+                  message: "El password debe tener al menos 8 caracteres"
+                }
               })}
             />
             {typeof errors.password?.message === 'string' && (
@@ -114,7 +128,8 @@ const Register = () => {
               placeholder="Repetir Password"
               className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
               {...register("password_confirmation", {
-                required: "El password confirmacion es obligatorio"
+                required: "El password confirmacion es obligatorio",
+                validate: (value) => value == password || 'Los passwords no son iguales'
               })}
             />
             {typeof errors.password_confirmation?.message === 'string' && (

@@ -18,7 +18,8 @@ const Login = () => {
   const handleRegister = async (formData: ILoginUser) => {
     try {
       const { data } = await api.post('/auth/login', formData)
-      console.log(data)
+      const { token } = data
+      localStorage.setItem("token", token)
       toast.success(data.msg)
       reset()
     } catch (error) {
@@ -88,11 +89,9 @@ const Login = () => {
         />
       </form>
       <div className='flex'>
-
         No tienes cuenta?
-
         <Link to={"/auth/register"} className="underline">
-           Crea una aqui
+          Crea una aqui
         </Link>
       </div>
     </div>

@@ -145,15 +145,14 @@ const Register = () => {
 
 
       </form>
-      <nav>
-        <Link to={"/auth/login"}
-          className=" mt-2 bg-green-400 rounded-md p-4  text-white text-lg
-            justify-center font-bold uppercase
-            flex
-          ">
+
+      <div className='flex'>
+        No tienes cuenta?
+        <Link to={"/auth/login"} className="underline">
           Inicia sesión
         </Link>
-      </nav>
+      </div>
+     
     </>
   )
 }
